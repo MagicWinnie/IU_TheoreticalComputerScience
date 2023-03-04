@@ -254,10 +254,7 @@ class FSA_validator:
 
 
 def main() -> None:
-    try:
-        inp = open('fsa_6.txt', 'r')
-    except FileNotFoundError:
-        inp = open('fsa.txt', 'r')
+    inp = open('fsa.txt', 'r')
     out = open('result.txt', 'w')
 
     states, alpha, init_st, fin_st, trans = [], [], [], [], []
