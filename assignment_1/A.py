@@ -91,6 +91,7 @@ class FSA_validator:
         for el in self.__trans:
             s1, a, s2 = el.split('>')
 
+            # TEST 4 IS INCORRECT
             if s1 not in self.__states or s2 not in self.__states:
                 continue
 
@@ -162,6 +163,7 @@ class FSA_validator:
         for el in self.__fin_st:
             if el not in self.__states:
                 return el
+        # TEST 4 IS INCORRECT!
         # for el in self.__trans:
         #     s1, _, s2 = el.split('>')
             # if s1 not in self.__states:
