@@ -1,8 +1,8 @@
 # Dmitriy Okoneshnikov
+from copy import deepcopy
 from pprint import pprint
 from string import ascii_letters
 from typing import List, Tuple, Dict, Set
-from copy import deepcopy
 
 
 def isalnum(s: str) -> bool:
@@ -19,17 +19,17 @@ def check_lines(lines: List[str]) -> None:
         lines (List[str]): List containing a variable on each line.
     """
     assert len(lines) == 5,\
-        'Input file should contain 5 variables: states, alpha, initial, accepting, and trans!'
-    assert lines[0].startswith('states=['),\
-        'Input file should contain variable `states`!'
-    assert lines[1].startswith('alpha=['),\
-        'Input file should contain variable `alpha`!'
-    assert lines[2].startswith('initial=['),\
-        'Input file should contain variable `initial`!'
-    assert lines[3].startswith('accepting=['),\
-        'Input file should contain variable `accepting`!'
-    assert lines[4].startswith('trans=['),\
-        'Input file should contain variable `trans`!'
+        "Input file should contain 5 variables: states, alpha, initial, accepting, and trans!"
+    assert lines[0].startswith("states=["),\
+        "Input file should contain variable `states`!"
+    assert lines[1].startswith("alpha=["),\
+        "Input file should contain variable `alpha`!"
+    assert lines[2].startswith("initial=["),\
+        "Input file should contain variable `initial`!"
+    assert lines[3].startswith("accepting=["),\
+        "Input file should contain variable `accepting`!"
+    assert lines[4].startswith("trans=["),\
+        "Input file should contain variable `trans`!"
 
 
 def parse_lines(lines: List[str]) ->\
@@ -117,35 +117,39 @@ class FSA:
                                     ][self.__state2id[s1]].append(a)
 
     def Kleene(self) -> str:
+        """Kleene's algorithm implementation.
+
+        Returns:
+            str: translated NDFSA to RegExp.
+        """
+        # Check if FSA is correct
         if validation := self.validate():
             return validation
         R: List[List[str]] = [
             ['' for _ in range(self.__n)] for _ in range(self.__n)
         ]
 
-        # initial
+        # Initial sets
         for i in range(len(R)):
             for j in range(len(R)):
                 if self.__graph[i][j]:
                     R[i][j] = '|'.join(sorted(self.__graph[i][j]))
-                    R[i][j] += '|eps' if i == j else ''
+                    R[i][j] += "|eps" if i == j else ''
                 else:
-                    R[i][j] = 'eps' if i == j else '{}'
+                    R[i][j] = "eps" if i == j else "{}"
+        R_prev: List[List[str]] = deepcopy(R)
 
-        # print(-1)
-        # pprint(R, width=len(str(R[0])) + 10)
-        R_prev = deepcopy(R)
+        # Update the sets
         for k in range(len(R)):
             for i in range(len(R)):
                 for j in range(len(R)):
-                    R[i][j] = f'({R_prev[i][k]})({R_prev[k][k]})*({R_prev[k][j]})|({R_prev[i][j]})'
+                    R[i][j] = f"({R_prev[i][k]})({R_prev[k][k]})*({R_prev[k][j]})|({R_prev[i][j]})"
             R_prev = deepcopy(R)
-            # print(k)
-            # pprint(R, width=len(str(R[0])) + 10)
 
-        regs = [R[self.__state2id[self.__initial[0]]][self.__state2id[f]]
-                for f in self.__accepting]
-        result = '|'.join(map(lambda x: f"({x})", regs))
+        # Consider several accepting states case
+        regs: List[str] = [R[self.__state2id[self.__initial[0]]][self.__state2id[f]]
+                           for f in self.__accepting]
+        result: str = '|'.join(map(lambda x: f"({x})", regs))
         return result
 
     def validate(self) -> str:
@@ -245,7 +249,7 @@ class FSA:
         Returns:
             bool: Whether some states are disjoint.
         """
-        visited = self.__DFS(self.__undirected_graph, self.__states[0], set())
+        visited = self.__DFS(self.__undirected_graph, self.__initial[0], set())
         return len(visited) != len(self.__states)
 
     def __check_E7(self) -> bool:
@@ -266,7 +270,7 @@ class FSA:
 
 
 def main() -> None:
-    inp = open('input.txt', 'r')
+    inp = open("input.txt", 'r')
 
     states, alpha, initial, accepting, trans = [], [], [], [], []
     try:
