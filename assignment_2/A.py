@@ -286,17 +286,12 @@ class FSA:
 def main() -> None:
     inp = open("input.txt", 'r')
 
-    states, alpha, initial, accepting, trans = [], [], [], [], []
     try:
-        states, alpha, initial, accepting, trans = parse_lines(inp.readlines())
-    except AssertionError:
-        print("E1: Input file is malformed")
-    else:
-        fsa = FSA(
-            states, alpha, initial, accepting, trans
-        )
+        fsa = FSA(*parse_lines(inp.readlines()))
         result = fsa.Kleene()
         print(result)
+    except AssertionError:
+        print("E1: Input file is malformed")
     finally:
         inp.close()
 
