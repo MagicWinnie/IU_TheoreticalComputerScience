@@ -6,6 +6,14 @@ from typing import List, Tuple, Dict, Set
 
 
 def isalnum(s: str) -> bool:
+    """Check if string contains only latin letters and digits.
+
+    Args:
+        s (str): string to check.
+
+    Returns:
+        bool: whether the string contains only latin letters and digits.
+    """
     for el in s:
         if not el.isdigit() and el not in ascii_letters:
             return False
@@ -35,6 +43,9 @@ def check_lines(lines: List[str]) -> None:
 def parse_lines(lines: List[str]) ->\
         Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """Parse lines of input.
+
+    Args:
+        lines (List[str]): List containing a variable on each line.
 
     Returns:
         List[str]: states variable.
@@ -92,15 +103,19 @@ class FSA:
         self.__initial = initial
         self.__accepting = accepting
         self.__trans = trans
+
         self.__n = len(self.__states)
+
         self.__state2id: Dict[str, int] = {
             self.__states[i]: i for i in range(self.__n)}
         self.__id2state: Dict[int, str] = {
             i: self.__states[i] for i in range(self.__n)}
-        self.__graph: List[List[List[str]]] = [[[]
-                                                for _ in range(self.__n)] for _ in range(self.__n)]
+
+        self.__graph: List[List[List[str]]] = [
+            [[] for _ in range(self.__n)] for _ in range(self.__n)]
         self.__undirected_graph: List[List[List[str]]] = [
             [[] for _ in range(self.__n)] for _ in range(self.__n)]
+
         self.__create_graphs()
 
     def __create_graphs(self) -> None:
@@ -126,8 +141,7 @@ class FSA:
         if validation := self.validate():
             return validation
         R: List[List[str]] = [
-            ['' for _ in range(self.__n)] for _ in range(self.__n)
-        ]
+            ['' for _ in range(self.__n)] for _ in range(self.__n)]
 
         # Initial sets
         for i in range(len(R)):
