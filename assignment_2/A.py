@@ -120,7 +120,7 @@ class FSA:
         """Kleene's algorithm implementation.
 
         Returns:
-            str: translated NDFSA to RegExp.
+            str: translated DFSA to RegExp.
         """
         # Check if FSA is correct
         if validation := self.validate():
