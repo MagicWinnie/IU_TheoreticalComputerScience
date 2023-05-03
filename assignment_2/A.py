@@ -285,7 +285,6 @@ class FSA:
 
 def main() -> None:
     inp = open("input.txt", 'r')
-
     try:
         fsa = FSA(*parse_lines(inp.readlines()))
         result = fsa.Kleene()
